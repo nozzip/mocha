@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Button, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { FilterAlt, ExpandMore } from '@mui/icons-material';
-import { Category } from '@/shared/types';
+import type { Category } from '../shared/types';
 
 interface FiltersProps {
     selectedCategory: string;

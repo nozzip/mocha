@@ -1,4 +1,5 @@
-import { Box, Grid, Typography, Link } from '@mui/material';
+import { Box, Typography, Link } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 interface GameSegment {
     title: string;
@@ -61,7 +62,7 @@ export default function GameSegments() {
                     sx={{
                         fontSize: '1.25rem',
                         color: '#F5F5F5',
-                        maxWidth: 800,
+                        maxWidth: 'lg',
                         mx: 'auto',
                         fontFamily: '"Lora", serif',
                     }}

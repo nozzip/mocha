@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { Box, Button, Typography, Chip } from '@mui/material';
 import { ShoppingCart, Inventory } from '@mui/icons-material';
-import { Product } from '../shared/types';
-import { useCart } from '../hooks/useCart';
+import type { Product } from '../shared/types';
+import { useCart } from '../hooks/cartContextType';
 
 interface ProductCardProps {
     product: Product;
@@ -220,3 +219,5 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         </Box>
     );
 }
+
+

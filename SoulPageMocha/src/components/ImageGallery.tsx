@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Box, Grid, IconButton, Backdrop } from '@mui/material';
+import { Box, IconButton, Backdrop } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { ArrowBackIos, ArrowForwardIos, ZoomIn, Close } from '@mui/icons-material';
 
 interface ProductImage {
@@ -215,7 +216,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
                     p: 2,
                 }}
             >
-                <Box sx={{ position: 'relative', maxWidth: 1200, maxHeight: '100%' }}>
+                <Box sx={{ position: 'relative', maxWidth: 'xl', maxHeight: '100%' }}>
                     <IconButton
                         onClick={() => setIsZoomOpen(false)}
                         aria-label="Close zoom"

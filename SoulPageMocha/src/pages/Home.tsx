@@ -87,15 +87,15 @@ export default function Home() {
                 searchQuery={searchQuery}
             />
 
-            <Container sx={{ maxWidth: 1200, px: { xs: 2, sm: 3, lg: 4 }, py: 4 }}>
+            <Container sx={{ maxWidth: 'xl', px: { xs: 2, sm: 3, lg: 4 }, py: 4 }}>
                 <Carousel images={carouselImages} />
             </Container>
 
-            <Container sx={{ maxWidth: 1200, px: { xs: 2, sm: 3, lg: 4 } }}>
+            <Container sx={{ maxWidth: 'xl', px: { xs: 2, sm: 3, lg: 4 } }}>
                 <GameSegments />
             </Container>
 
-            <Container sx={{ maxWidth: 1200, px: { xs: 2, sm: 3, lg: 4 } }}>
+            <Container sx={{ maxWidth: 'xl', px: { xs: 2, sm: 3, lg: 4 } }}>
                 <LatestAdded onProductClick={handleProductClick} />
             </Container>
 

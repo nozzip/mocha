@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Backdrop, Box, IconButton, Typography, Button, TextField, Grid, CircularProgress } from '@mui/material';
+import { Backdrop, Box, IconButton, Typography, Button, TextField, CircularProgress } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { Close, CreditCard, Lock, CheckCircle } from '@mui/icons-material';
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../hooks/cartContextType';
 import { ParchmentTexture } from '../theme';
 
 interface CheckoutModalProps {
@@ -244,188 +245,188 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                             Contact Information
                         </Typography>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} md={6}>
-                                <TextField
-                                    fullWidth
-                                    type="email"
-                                    name="email"
-                                    label="Email address"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    required
-                                    sx={textFieldStyles}
-                                    aria-label="Email address"
-                                />
-                            </Grid>
                             <Grid item xs={12} md={6} />
-                            <Grid item xs={12} md={6}>
+                            <TextField
+                                fullWidth
+                                type="email"
+                                name="email"
+                                label="Email address"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                required
+                                sx={textFieldStyles}
+                                aria-label="Email address"
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6} />
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                fullWidth
+                                type="text"
+                                name="firstName"
+                                label="First name"
+                                value={formData.firstName}
+                                onChange={handleInputChange}
+                                required
+                                sx={textFieldStyles}
+                                aria-label="First name"
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6} >
+                            <TextField
+                                fullWidth
+                                type="text"
+                                name="lastName"
+                                label="Last name"
+                                value={formData.lastName}
+                                onChange={handleInputChange}
+                                required
+                                sx={textFieldStyles}
+                                aria-label="Last name"
+                            />
+                        </Grid>
+                    </Box>
+                </Box>
+
+                <Box>
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            color: '#FFF8E1',
+                            fontFamily: '"Cinzel", serif',
+                            fontWeight: 'bold',
+                            mb: 1.5,
+                        }}
+                    >
+                        Shipping Address
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <TextField
+                            fullWidth
+                            type="text"
+                            name="address"
+                            label="Street address"
+                            value={formData.address}
+                            onChange={handleInputChange}
+                            required
+                            sx={textFieldStyles}
+                            aria-label="Street address"
+                        />
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     fullWidth
                                     type="text"
-                                    name="firstName"
-                                    label="First name"
-                                    value={formData.firstName}
+                                    name="city"
+                                    label="City"
+                                    value={formData.city}
                                     onChange={handleInputChange}
                                     required
                                     sx={textFieldStyles}
-                                    aria-label="First name"
+                                    aria-label="City"
                                 />
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     fullWidth
                                     type="text"
-                                    name="lastName"
-                                    label="Last name"
-                                    value={formData.lastName}
+                                    name="zipCode"
+                                    label="ZIP code"
+                                    value={formData.zipCode}
                                     onChange={handleInputChange}
                                     required
                                     sx={textFieldStyles}
-                                    aria-label="Last name"
+                                    aria-label="ZIP code"
                                 />
                             </Grid>
                         </Grid>
                     </Box>
-
-                    <Box>
-                        <Typography
-                            variant="h6"
-                            sx={{
-                                color: '#FFF8E1',
-                                fontFamily: '"Cinzel", serif',
-                                fontWeight: 'bold',
-                                mb: 1.5,
-                            }}
-                        >
-                            Shipping Address
-                        </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <TextField
-                                fullWidth
-                                type="text"
-                                name="address"
-                                label="Street address"
-                                value={formData.address}
-                                onChange={handleInputChange}
-                                required
-                                sx={textFieldStyles}
-                                aria-label="Street address"
-                            />
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        type="text"
-                                        name="city"
-                                        label="City"
-                                        value={formData.city}
-                                        onChange={handleInputChange}
-                                        required
-                                        sx={textFieldStyles}
-                                        aria-label="City"
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        type="text"
-                                        name="zipCode"
-                                        label="ZIP code"
-                                        value={formData.zipCode}
-                                        onChange={handleInputChange}
-                                        required
-                                        sx={textFieldStyles}
-                                        aria-label="ZIP code"
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Box>
-
-                    <Box>
-                        <Typography
-                            variant="h6"
-                            sx={{
-                                color: '#FFF8E1',
-                                fontFamily: '"Cinzel", serif',
-                                fontWeight: 'bold',
-                                mb: 1.5,
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <CreditCard sx={{ fontSize: 20, mr: 1, color: '#FFD700' }} />
-                            Payment Information
-                        </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <TextField
-                                fullWidth
-                                type="text"
-                                name="cardNumber"
-                                label="Card number"
-                                value={formData.cardNumber}
-                                onChange={handleInputChange}
-                                required
-                                sx={textFieldStyles}
-                                aria-label="Card number"
-                            />
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        type="text"
-                                        name="expiryDate"
-                                        label="MM/YY"
-                                        value={formData.expiryDate}
-                                        onChange={handleInputChange}
-                                        required
-                                        sx={textFieldStyles}
-                                        aria-label="Expiry date"
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        type="text"
-                                        name="cvv"
-                                        label="CVV"
-                                        value={formData.cvv}
-                                        onChange={handleInputChange}
-                                        required
-                                        sx={textFieldStyles}
-                                        aria-label="CVV"
-                                    />
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', alignItems: 'center', color: '#F5F5F5', fontSize: '0.875rem', fontFamily: '"Lora", serif' }}>
-                        <Lock sx={{ fontSize: 16, mr: 1, color: '#355E3B' }} />
-                        Your payment information is encrypted and secure
-                    </Box>
-
-                    <Button
-                        type="submit"
-                        disabled={isProcessing || cart.items.length === 0}
-                        className="fantasy-button"
-                        sx={{
-                            py: 1.5,
-                            borderRadius: 1,
-                        }}
-                        aria-label={`Complete order for $${cart.total.toFixed(2)}`}
-                    >
-                        {isProcessing ? (
-                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <CircularProgress size={20} sx={{ color: '#FFF8E1', mr: 1 }} />
-                                Processing...
-                            </Box>
-                        ) : (
-                            `Complete Order • $${cart.total.toFixed(2)}`
-                        )}
-                    </Button>
                 </Box>
+
+                <Box>
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            color: '#FFF8E1',
+                            fontFamily: '"Cinzel", serif',
+                            fontWeight: 'bold',
+                            mb: 1.5,
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <CreditCard sx={{ fontSize: 20, mr: 1, color: '#FFD700' }} />
+                        Payment Information
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <TextField
+                            fullWidth
+                            type="text"
+                            name="cardNumber"
+                            label="Card number"
+                            value={formData.cardNumber}
+                            onChange={handleInputChange}
+                            required
+                            sx={textFieldStyles}
+                            aria-label="Card number"
+                        />
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    type="text"
+                                    name="expiryDate"
+                                    label="MM/YY"
+                                    value={formData.expiryDate}
+                                    onChange={handleInputChange}
+                                    required
+                                    sx={textFieldStyles}
+                                    aria-label="Expiry date"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    type="text"
+                                    name="cvv"
+                                    label="CVV"
+                                    value={formData.cvv}
+                                    onChange={handleInputChange}
+                                    required
+                                    sx={textFieldStyles}
+                                    aria-label="CVV"
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', color: '#F5F5F5', fontSize: '0.875rem', fontFamily: '"Lora", serif' }}>
+                    <Lock sx={{ fontSize: 16, mr: 1, color: '#355E3B' }} />
+                    Your payment information is encrypted and secure
+                </Box>
+
+                <Button
+                    type="submit"
+                    disabled={isProcessing || cart.items.length === 0}
+                    className="fantasy-button"
+                    sx={{
+                        py: 1.5,
+                        borderRadius: 1,
+                    }}
+                    aria-label={`Complete order for $${cart.total.toFixed(2)}`}
+                >
+                    {isProcessing ? (
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <CircularProgress size={20} sx={{ color: '#FFF8E1', mr: 1 }} />
+                            Processing...
+                        </Box>
+                    ) : (
+                        `Complete Order • $${cart.total.toFixed(2)}`
+                    )}
+                </Button>
             </ParchmentTexture>
         </Backdrop>
+
     );
 }

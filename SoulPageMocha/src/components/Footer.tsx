@@ -1,4 +1,5 @@
-import { Box, Grid, Typography, Link } from '@mui/material';
+import { Box, Typography, Link } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { Security, LocalShipping, CreditCard, Handshake } from '@mui/icons-material';
 
 export default function Footer() {
@@ -11,7 +12,7 @@ export default function Footer() {
                 py: 6,
             }}
         >
-            <Box sx={{ maxWidth: 1200, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
+            <Box sx={{ maxWidth: "xl", mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
                 <Grid container spacing={4} sx={{ mb: 4 }}>
                     <Grid item xs={12} md={3}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

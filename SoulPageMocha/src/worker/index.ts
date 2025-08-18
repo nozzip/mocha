@@ -2,8 +2,10 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 
+import type { D1Database } from "@cloudflare/workers-types"; // or the correct import for your DB type
+
 interface Env {
-    DB: any; // Replace 'any' with the actual type of your DB object
+    DB: D1Database; // Replace 'D1Database' with your actual DB type if different
 }
 
 const app = new Hono<{ Bindings: Env }>();
@@ -28,7 +30,7 @@ app.get("/api/products", async (c) => {
     LEFT JOIN categories c ON p.category_id = c.id 
     WHERE p.is_in_stock = true
   `;
-    const params: any[] = [];
+    const params: unknown[] = [];
 
     if (category) {
         query += " AND c.slug = ?";
@@ -180,6 +182,20 @@ app.get("/api/cart", async (c) => {
     const db = c.env.DB;
     const sessionId = c.req.header("x-session-id") || "anonymous";
 
+    interface CartItem {
+        id: number;
+        session_id: string;
+        product_id: number;
+        quantity: number;
+        created_at: string;
+        updated_at?: string;
+        name: string;
+        price: number;
+        image_url: string;
+        stock_quantity: number;
+        total_price: number;
+    }
+
     const cartItems = await db.prepare(`
     SELECT ci.*, p.name, p.price, p.image_url, p.stock_quantity,
            (ci.quantity * p.price) as total_price
@@ -189,7 +205,7 @@ app.get("/api/cart", async (c) => {
     ORDER BY ci.created_at DESC
   `).bind(sessionId).all();
 
-    const total = cartItems.results.reduce((sum: number, item: any) => sum + item.total_price, 0);
+    const total = ((cartItems.results as unknown) as CartItem[]).reduce((sum: number, item: CartItem) => sum + item.total_price, 0);
 
     return c.json({
         items: cartItems.results,

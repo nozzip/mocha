@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Box, Container, Grid, Typography, CircularProgress } from '@mui/material';
+import { Box, Container, Typography, CircularProgress } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import type { Product } from '../shared/types';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -21,29 +22,28 @@ export default function Catalog() {
     const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
 
     useEffect(() => {
+        const fetchProducts = async () => {
+            setLoading(true);
+            try {
+                const params = new URLSearchParams();
+                if (searchQuery) params.append('search', searchQuery);
+                if (selectedCategory) params.append('category', selectedCategory);
+                if (selectedMaterial) params.append('material', selectedMaterial);
+                if (selectedScale) params.append('scale', selectedScale);
+
+                const response = await fetch(`/api/products?${params.toString()}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setProducts(data);
+                }
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchProducts();
     }, [searchQuery, selectedCategory, selectedMaterial, selectedScale]);
-
-    const fetchProducts = async () => {
-        setLoading(true);
-        try {
-            const params = new URLSearchParams();
-            if (searchQuery) params.append('search', searchQuery);
-            if (selectedCategory) params.append('category', selectedCategory);
-            if (selectedMaterial) params.append('material', selectedMaterial);
-            if (selectedScale) params.append('scale', selectedScale);
-
-            const response = await fetch(`/api/products?${params.toString()}`);
-            if (response.ok) {
-                const data = await response.json();
-                setProducts(data);
-            }
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleCheckout = () => {
         setIsCartOpen(false);
@@ -90,13 +90,15 @@ export default function Catalog() {
                 searchQuery={searchQuery}
             />
             <Container
-                maxWidth={1200}
-                px={{ xs: 2, sm: 3, lg: 4 }}
-                py={4}
+                maxWidth={'lg'}
+                sx={{
+                    paddingX: { xs: 2, sm: 3, lg: 4 },
+                    py: 4,
+                }}
             >
                 <Grid container spacing={4}>
                     <Grid item xs={12} lg={3}>
-                        <Box sx={{ width: '100%', maxWidth: 320, flexShrink: 0 }}>
+                        <Box sx={{ width: '100%', maxWidth: 'sm', flexShrink: 0 }}>
                             <Filters
                                 selectedCategory={selectedCategory}
                                 selectedMaterial={selectedMaterial}

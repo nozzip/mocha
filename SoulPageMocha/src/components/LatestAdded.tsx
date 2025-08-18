@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Link, Skeleton } from '@mui/material';
+import { Box, Typography, Link, Skeleton } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { AccessTime, ArrowForward } from '@mui/icons-material';
-import { Product } from '@/shared/types';
+import type { Product } from '../shared/types';
 import ProductCard from './ProductCard';
 
 interface LatestAddedProps {

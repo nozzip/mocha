@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AppBar, Box, Toolbar, IconButton, Typography, Link, TextField } from '@mui/material';
 import { ShoppingCart, Search, Menu, Close } from '@mui/icons-material';
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../hooks/cartContextType';
 
 interface NavbarProps {
     onCartToggle: () => void;
@@ -39,7 +39,7 @@ export default function Navbar({ onCartToggle, onSearchChange, searchQuery }: Na
             }}
             role="navigation"
         >
-            <Toolbar sx={{ maxWidth: 1200, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 }, width: '100%' }}>
+            <Toolbar sx={{ maxWidth: 'xl', mx: 'auto', px: { xs: 2, sm: 3, lg: 4 }, width: '100%' }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <Link
                         href="/"
@@ -88,7 +88,7 @@ export default function Navbar({ onCartToggle, onSearchChange, searchQuery }: Na
                     </Link>
                 </Box>
 
-                <Box sx={{ flex: 1, maxWidth: 400, mx: { md: 4 }, display: { xs: 'none', md: 'block' } }}>
+                <Box sx={{ flex: 1, maxWidth: 'md', mx: { md: 4 }, display: { xs: 'none', md: 'block' } }}>
                     <TextField
                         fullWidth
                         type="text"

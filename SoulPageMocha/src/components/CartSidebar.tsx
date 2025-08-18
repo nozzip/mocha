@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { Box, Backdrop, IconButton, Button, Typography } from '@mui/material';
 import { Close, Add, Remove, Delete } from '@mui/icons-material';
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../hooks/cartContextType';
 import type { CartItem } from '../shared/types';
 
 interface CartSidebarProps {

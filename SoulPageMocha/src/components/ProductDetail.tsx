@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Box, Grid, Typography, Button, IconButton, Chip, Skeleton } from '@mui/material';
+import { Box, Typography, Button, IconButton, Chip, Skeleton } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { ArrowBack, ShoppingCart, Inventory, Star, Favorite } from '@mui/icons-material';
-import { Product } from '../shared/types';
-import { useCart } from '../hooks/useCart';
+import type { Product } from '../shared/types';
+import { useCart } from '../hooks/cartContextType';
 import ProductCard from './ProductCard';
 import ImageGallery from './ImageGallery';
 
@@ -20,35 +21,35 @@ export default function ProductDetail({ productId, onBack, onProductClick }: Pro
     const { addToCart, isLoading } = useCart();
 
     useEffect(() => {
+        const fetchProductDetail = async () => {
+            try {
+                const response = await fetch(`/api/products/${productId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setProduct(data);
+                }
+            } catch (error) {
+                console.error('Error fetching product detail:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const fetchRecommendations = async () => {
+            try {
+                const response = await fetch(`/api/products/${productId}/recommendations`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setRecommendations(data);
+                }
+            } catch (error) {
+                console.error('Error fetching recommendations:', error);
+            }
+        };
+
         fetchProductDetail();
         fetchRecommendations();
     }, [productId]);
-
-    const fetchProductDetail = async () => {
-        try {
-            const response = await fetch(`/api/products/${productId}`);
-            if (response.ok) {
-                const data = await response.json();
-                setProduct(data);
-            }
-        } catch (error) {
-            console.error('Error fetching product detail:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchRecommendations = async () => {
-        try {
-            const response = await fetch(`/api/products/${productId}/recommendations`);
-            if (response.ok) {
-                const data = await response.json();
-                setRecommendations(data);
-            }
-        } catch (error) {
-            console.error('Error fetching recommendations:', error);
-        }
-    };
 
     const handleAddToCart = async () => {
         if (product) {
@@ -65,7 +66,7 @@ export default function ProductDetail({ productId, onBack, onProductClick }: Pro
                     py: 4,
                 }}
             >
-                <Box sx={{ maxWidth: 1200, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
+                <Box sx={{ maxWidth: 'xl', mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
                     <Skeleton variant="rectangular" width={128} height={32} sx={{ mb: 4, bgcolor: '#3C2F2F' }} />
                     <Grid container spacing={6}>
                         <Grid item xs={12} lg={6}>
@@ -96,7 +97,7 @@ export default function ProductDetail({ productId, onBack, onProductClick }: Pro
                     py: 4,
                 }}
             >
-                <Box sx={{ maxWidth: 1200, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
+                <Box sx={{ maxWidth: 'xl', mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
                     <Button
                         onClick={onBack}
                         sx={{
@@ -148,7 +149,7 @@ export default function ProductDetail({ productId, onBack, onProductClick }: Pro
                 py: 4,
             }}
         >
-            <Box sx={{ maxWidth: 1200, mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
+            <Box sx={{ maxWidth: 'xl', mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
                 <Button
                     onClick={onBack}
                     sx={{
