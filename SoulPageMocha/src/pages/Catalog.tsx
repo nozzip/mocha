@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Box, Container, Typography, CircularProgress } from '@mui/material';
+import {
+    Box,
+    Container,
+    Typography,
+    CircularProgress,
+} from '@mui/material';
 import Grid from '@mui/material/Grid';
 import type { Product } from '../shared/types';
 import Navbar from '../components/Navbar';
@@ -10,7 +15,11 @@ import CartSidebar from '../components/CartSidebar';
 import CheckoutModal from '../components/CheckoutModal';
 import ProductDetail from '../components/ProductDetail';
 
-export default function Catalog() {
+type CatalogProps = {
+    initialProducts?: Product[];
+};
+
+export default function Catalog({ initialProducts }: CatalogProps) {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -21,30 +30,35 @@ export default function Catalog() {
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
 
-
     useEffect(() => {
+        if (initialProducts && initialProducts.length > 0) {
+            setProducts(initialProducts);
+            setLoading(false);
+            return;
+        }
+
         const fetchProducts = async () => {
             setLoading(true);
             try {
                 const response = await fetch('/catalog.json');
                 if (response.ok) {
                     const rawData = await response.json();
-                    const mapped = rawData.map((item: any, index: number) => ({
-                        id: `product-${index}`,
-                        name: item.title,
-                        image_url: item.imageSrc,
+                    const mapped = rawData.map((item: Product, index: number) => ({
+                        id: index,
+                        name: item.name || 'Untitled',
+                        image_url: item.images?.[0]?.image_url || '',
                         description: '',
-                        category_name: item.setName,
-                        scale: '',
-                        material: '',
-                        manufacturer: item.designer,
+                        category_name: item.setName || '',
+                        scale: item.scale || '',
+                        material: item.material || '',
+                        manufacturer: item.designer || '',
                         price: 0,
                         stock_quantity: 10,
                         is_in_stock: true,
-                        designer: item.designer,
-                        setName: item.setName,
-                        subCategory: item.subCategory,
-                        mimeType: item.mimeType,
+                        designer: item.designer || '',
+                        setName: item.setName || '',
+                        subCategory: item.subCategory || '',
+                        mimeType: item.mimeType || '',
                     }));
                     setProducts(mapped);
                 }
@@ -54,9 +68,9 @@ export default function Catalog() {
                 setLoading(false);
             }
         };
-        fetchProducts();
-    }, [searchQuery, selectedCategory, selectedMaterial, selectedScale]);
 
+        fetchProducts();
+    }, [initialProducts]);
 
     const handleCheckout = () => {
         setIsCartOpen(false);
@@ -69,7 +83,17 @@ export default function Catalog() {
 
     const handleBackToCatalog = () => setSelectedProduct(null);
 
-    if (selectedProduct) {
+    const filterProducts = () => {
+        return products.filter((product) => {
+            const matchesSearch = product.name?.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesCategory = selectedCategory ? product.category_name === selectedCategory : true;
+            const matchesMaterial = selectedMaterial ? product.material === selectedMaterial : true;
+            const matchesScale = selectedScale ? product.scale === selectedScale : true;
+            return matchesSearch && matchesCategory && matchesMaterial && matchesScale;
+        });
+    };
+
+    if (selectedProduct !== null) {
         return (
             <>
                 <ProductDetail
@@ -89,6 +113,9 @@ export default function Catalog() {
             </>
         );
     }
+
+    const filtered = filterProducts();
+
     return (
         <Box
             sx={{
@@ -102,13 +129,7 @@ export default function Catalog() {
                 onSearchChange={setSearchQuery}
                 searchQuery={searchQuery}
             />
-            <Container
-                maxWidth={'lg'}
-                sx={{
-                    paddingX: { xs: 2, sm: 3, lg: 4 },
-                    py: 4,
-                }}
-            >
+            <Container maxWidth="lg" sx={{ paddingX: { xs: 2, sm: 3, lg: 4 }, py: 4 }}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} lg={3}>
                         <Box sx={{ width: '100%', maxWidth: 'sm', flexShrink: 0 }}>
@@ -121,65 +142,40 @@ export default function Catalog() {
                                 onScaleChange={setSelectedScale}
                             />
                         </Box>
-                        <Grid item xs={12} lg={9}>
-                            {loading ? (
-                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 12 }}>
-                                    <CircularProgress sx={{ color: '#7C3AED' }} size={32} />
-                                </Box>
-                            ) : products.length === 0 ? (
-                                <Box sx={{ textAlign: 'center', py: 12 }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            fontWeight: 'bold',
-                                            color: '#FFF8E1',
-                                            fontFamily: '"Cinzel", serif',
-                                            mb: 1,
-                                        }}
-                                    >
-                                        No products found
+                    </Grid>
+                    <Grid item xs={12} lg={9}>
+                        {loading ? (
+                            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 12 }}>
+                                <CircularProgress sx={{ color: '#7C3AED' }} size={32} />
+                            </Box>
+                        ) : filtered.length === 0 ? (
+                            <Box sx={{ textAlign: 'center', py: 12 }}>
+                                <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#FFF8E1', fontFamily: '"Cinzel", serif', mb: 1 }}>
+                                    No products found
+                                </Typography>
+                                <Typography sx={{ color: '#F5F5F5', fontFamily: '"Lora", serif' }}>
+                                    Try adjusting your search or filters
+                                </Typography>
+                            </Box>
+                        ) : (
+                            <>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#FFF8E1', fontFamily: '"Cinzel", serif' }}>
+                                        {searchQuery ? `Search results for "${searchQuery}"` : 'All Products'}
                                     </Typography>
-                                    <Typography
-                                        sx={{
-                                            color: '#F5F5F5',
-                                            fontFamily: '"Lora", serif',
-                                        }}
-                                    >
-                                        Try adjusting your search or filters
+                                    <Typography sx={{ color: '#F5F5F5', fontFamily: '"Lora", serif' }}>
+                                        {filtered.length} product{filtered.length !== 1 ? 's' : ''} found
                                     </Typography>
                                 </Box>
-                            ) : (
-                                <>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                                        <Typography
-                                            variant="h5"
-                                            sx={{
-                                                fontWeight: 'bold',
-                                                color: '#FFF8E1',
-                                                fontFamily: '"Cinzel", serif',
-                                            }}
-                                        >
-                                            {searchQuery ? `Search results for "${searchQuery}"` : 'All Products'}
-                                        </Typography>
-                                        <Typography
-                                            sx={{
-                                                color: '#F5F5F5',
-                                                fontFamily: '"Lora", serif',
-                                            }}
-                                        >
-                                            {products.length} product{products.length !== 1 ? 's' : ''} found
-                                        </Typography>
-                                    </Box>
-                                    <Grid container spacing={3}>
-                                        {products.map((product) => (
-                                            <Grid item xs={12} md={6} xl={4} key={product.id}>
-                                                <ProductCard product={product} onClick={handleProductClick} />
-                                            </Grid>
-                                        ))}
-                                    </Grid>
-                                </>
-                            )}
-                        </Grid>
+                                <Grid container spacing={3}>
+                                    {filtered.map((product) => (
+                                        <Grid item xs={12} md={6} xl={4} key={product.id}>
+                                            <ProductCard product={product} onClick={handleProductClick} />
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </>
+                        )}
                     </Grid>
                 </Grid>
             </Container>
@@ -199,4 +195,3 @@ export default function Catalog() {
         </Box>
     );
 }
-
