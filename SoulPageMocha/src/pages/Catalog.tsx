@@ -21,29 +21,42 @@ export default function Catalog() {
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
 
+
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
             try {
-                const params = new URLSearchParams();
-                if (searchQuery) params.append('search', searchQuery);
-                if (selectedCategory) params.append('category', selectedCategory);
-                if (selectedMaterial) params.append('material', selectedMaterial);
-                if (selectedScale) params.append('scale', selectedScale);
-
-                const response = await fetch(`/api/products?${params.toString()}`);
+                const response = await fetch('/catalog.json');
                 if (response.ok) {
-                    const data = await response.json();
-                    setProducts(data);
+                    const rawData = await response.json();
+                    const mapped = rawData.map((item: any, index: number) => ({
+                        id: `product-${index}`,
+                        name: item.title,
+                        image_url: item.imageSrc,
+                        description: '',
+                        category_name: item.setName,
+                        scale: '',
+                        material: '',
+                        manufacturer: item.designer,
+                        price: 0,
+                        stock_quantity: 10,
+                        is_in_stock: true,
+                        designer: item.designer,
+                        setName: item.setName,
+                        subCategory: item.subCategory,
+                        mimeType: item.mimeType,
+                    }));
+                    setProducts(mapped);
                 }
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Error loading catalog.json:', error);
             } finally {
                 setLoading(false);
             }
         };
         fetchProducts();
     }, [searchQuery, selectedCategory, selectedMaterial, selectedScale]);
+
 
     const handleCheckout = () => {
         setIsCartOpen(false);

@@ -34,6 +34,10 @@ export const ProductSchema = z.object({
     stock_quantity: z.number(),
     created_at: z.string(),
     updated_at: z.string(),
+    designer: z.string(),
+    setName: z.string(),
+    subCategory: z.string(),
+    mimeType: z.string(),
     images: z.array(ProductImageSchema).optional(),
 });
 
